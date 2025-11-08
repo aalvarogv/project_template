@@ -28,3 +28,22 @@ Investigar cómo se relacionan los genes asociados al fenotipo \textit{Abnormal 
     \item Interpretar los resultados y contrastarlos con la literatura científica, con el fin de proponer hipótesis sobre cómo estos genes podrían influir en los comportamientos anómalos de ingesta de líquidos.
 \end{enumerate}
 
+\subsection{Metodología}
+
+La investigación seguirá un enfoque \textbf{cuantitativo} e \textit{in silico}, basado en la construcción y análisis de redes génicas para estudiar los genes asociados al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082). El flujo metodológico propuesto se divide en las siguientes fases:
+
+\begin{itemize}
+    \item \textbf{Recolección y depuración de datos.} 
+    Los genes relacionados con el fenotipo se recopilarán a partir de la base de datos \textbf{Human Phenotype Ontology} (HPO), garantizando que la información utilizada sea actual y de alta calidad. Esta fase incluirá la verificación de duplicados, la estandarización de nombres génicos y la selección de aquellos con evidencia clínica o experimental relevante, siguiendo los criterios establecidos en revisiones sobre reconstrucción de redes genéticas \cite{futreal2014landscape}.
+    
+    \item \textbf{Construcción de la red génica.} 
+    Se generará una red de interacción génica mediante la plataforma \textbf{STRING} y otras bases de datos de interacciones proteína-proteína, considerando tanto interacciones físicas como funcionales. Se aplicarán métodos de construcción de redes biológicas descritos en la literatura, que incluyen la creación de grafos ponderados y no dirigidos para representar la conectividad entre genes \cite{ideker2011network,zhou2023ppi}.
+    
+    \item \textbf{Análisis topológico y funcional.} 
+    La red obtenida será analizada para identificar nodos altamente conectados (\textit{hubs}), módulos funcionales y posibles subredes relevantes. Se calcularán métricas topológicas clave, como el grado de conectividad, la centralidad y el coeficiente de agrupamiento, siguiendo las recomendaciones de análisis de redes en biología de sistemas y enfermedades complejas \cite{barabasi2019network,li2024complex}. Además, se realizará un \textbf{análisis de enriquecimiento funcional}, evaluando rutas biológicas y procesos moleculares asociados con la homeostasis hídrica y el control neuroendocrino de la sed.
+    
+    \item \textbf{Interpretación de resultados.} 
+    Los resultados del análisis de la red se integrarán con la información disponible en la literatura biomédica, permitiendo plantear hipótesis sobre los mecanismos moleculares subyacentes al fenotipo. Este enfoque sigue la metodología propuesta para estudios de enfermedades complejas mediante análisis de redes multi-ómicas \cite{barabasi2019network}.
+\end{itemize}
+
+En conjunto, esta metodología permite un análisis \textbf{sistemático, reproducible y escalable} de los genes implicados en comportamientos anómalos de ingesta, sin requerir experimentación directa, lo que la convierte en una estrategia adecuada para un trabajo de investigación a nivel universitario.
