@@ -1,0 +1,26 @@
+H - HECHO
+R - REVISAR Y/O TENER EN CUENTA A FUTURO
+
+
+- H Quitar quien lo hace y quien publica y dejar solo la referencia
+- H Coherente con el uso de negrita y cursiva (recalcar importancia coherente)
+- H NO hablar en futuro, escribir en pasado
+- H Añadir una especie de conclusión intermedia de los genes principales involucrados (cerrar con algo molecular)
+- H Objetivo e hipótesis: no se expresa correctamente la diferencia entre una y otra. Mejor separarlo. Hay que plantear un hipotesis más clara. Definir también bien unos objetivos con puntos.
+	- Se presentan dos veces objetivos e hipotesis?
+	- Hipotesis dentro de metodos no no?
+	- HACER SECCION DE OBJETIVOS TRAS LA INTRODUCCION Y ANTES DE LOS METODOS
+- H - completar cuando se haga la practica: Si se ve conveniente añadir apartado al final de materiales especificando equipo y demas de lo que se ha usado mas concretamente
+- R Revisar referencias (por ejemplo el 13 está mal) el 13 seria citacion de base de datos de HPO
+	- H STRING referencia falta ARTICULO QUE EXPLICA STRING COMO TAL
+	- R y tener pendiente a futuro: REFERENCIAR todas las bases de datos que se utilicen para que sea replicable
+- H STRING deberia ir en recoleccion? string da/facilita info sobre interacciones en base a los genes y fenotipos (enriquecimiento de datos)
+- H Mayor especificacion de los puntos de metodologia para mejor reproducibilidad del trabajo
+- H en subsection siguiente a metodologia: En analisis topologico citar R o Python? depende lo que se vaya a usar y los paquetes concretos que sirven para eso (y APIs) citar articulos solo?
+- H Analisis topoligico ... sustituir por analisis estadístico
+	- mencionar analisis estadisticos usados con los paquetes usados y referencias
+- R Resultados sobra por ahora, esta bien utilizar la misma estructura que en metodologia diciendo lo obtenido en cada punto
+- H Asegurar que cada objetivo esta cubierto con una metodologia que posteriormente sera explicada
+
+
+
