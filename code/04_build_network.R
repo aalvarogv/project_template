@@ -1,8 +1,7 @@
 library(igraph)
 library(tidyverse)
 
-# Suponemos que estamos ejecutando desde CODE/
-# base_dir = .../project_template
+
 base_dir <- dirname(getwd())
 
 edges_path   <- file.path(base_dir, "RESULTS", "raw", "string_edges.csv")
@@ -34,15 +33,15 @@ g <- graph_from_data_frame(
 cat("Nodos iniciales:", vcount(g), "\n")
 cat("Aristas iniciales:", ecount(g), "\n")
 
-# (Opcional) eliminar genes sin conexiones (en principio no debería haber)
+# Eliminar genes sin conexiones 
 g <- delete_vertices(g, V(g)[degree(g) == 0])
 
 cat("Nodos tras eliminar aislados:", vcount(g), "\n")
 cat("Aristas tras eliminar aislados:", ecount(g), "\n")
 
-# ----------------------------------
-# Integrar información de ChEMBL (si existe)
-# ----------------------------------
+
+# Integrar información de ChEMBL 
+
 is_chembl_target <- rep(FALSE, vcount(g))
 names(is_chembl_target) <- V(g)$name
 
@@ -61,9 +60,8 @@ if (file.exists(chembl_path)) {
 
 V(g)$is_chembl_target <- is_chembl_target
 
-# ----------------------------------
 # Cálculo de métricas de red
-# ----------------------------------
+
 
 metrics <- tibble(
   gene      = V(g)$name,
