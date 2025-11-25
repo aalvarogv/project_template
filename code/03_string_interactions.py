@@ -73,3 +73,34 @@ else:
 
 print(f"Interacciones guardadas en: {edges_path}")
 print(f"Total de aristas guardadas: {len(edges_df)}")
+
+
+# ChEMBL: consultar si el gen es una diana farmacológica 
+import time
+
+chembl_targets = []
+
+for g in genes:
+    url = f"https://www.ebi.ac.uk/chembl/api/data/target/search.json?q={g}"
+    try:
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            js = r.json()
+            if js["page_meta"]["total_count"] > 0:
+                chembl_id = js["targets"][0]["target_chembl_id"]
+                chembl_targets.append({"gene": g, "chembl_id": chembl_id})
+            else:
+                chembl_targets.append({"gene": g, "chembl_id": None})
+    except:
+        chembl_targets.append({"gene": g, "chembl_id": None})
+
+    time.sleep(0.2)   # para no saturar ChEMBL
+
+
+pd.DataFrame(chembl_targets).to_csv(
+    base_dir / "RESULTS" / "raw" / "chembl_targets.csv",
+    index=False
+)
+
+print("Targets de ChEMBL guardados en RESULTS/raw/chembl_targets.csv")
+
