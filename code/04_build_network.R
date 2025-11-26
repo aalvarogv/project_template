@@ -61,8 +61,6 @@ if (file.exists(chembl_path)) {
 V(g)$is_chembl_target <- is_chembl_target
 
 # Cálculo de métricas de red
-
-
 metrics <- tibble(
   gene      = V(g)$name,
   degree    = degree(g),
@@ -95,3 +93,24 @@ cat("Resumen de red guardado en:", summary_path, "\n")
 # Guardar objeto de red
 saveRDS(g, graph_path)
 cat("Grafo guardado en:", graph_path, "\n")
+
+# Detección de comunidades (Algoritmo de Louvain)
+# set.seed para reproducibilidad
+set.seed(123) 
+comm <- cluster_louvain(g)
+
+# Añadir la pertenencia a módulo como atributo del nodo
+V(g)$module <- membership(comm)
+
+# Guardar tabla de asignación de módulos
+modules_df <- data.frame(
+  gene = V(g)$name,
+  module = as.numeric(V(g)$module) # ID numérico del cluster
+)
+
+modules_path <- file.path(out_dir, "network_modules.csv")
+write.csv(modules_df, modules_path, row.names = FALSE)
+cat("Módulos guardados en:", modules_path, "\n")
+
+# Actualizar el guardado del grafo para que incluya la info de módulos
+saveRDS(g, graph_path)
