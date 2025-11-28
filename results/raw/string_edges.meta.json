@@ -1,0 +1,10 @@
+{
+  "string_api": "https://string-db.org/api/json/network",
+  "species": 9606,
+  "required_score": 0.7,
+  "induced_subgraph_only": true,
+  "n_input_genes": 54,
+  "n_edges": 55,
+  "chembl_api": "https://www.ebi.ac.uk/chembl/api/data/target/search.json",
+  "timestamp": "2025-11-27T20:42:54Z"
+}
