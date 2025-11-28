@@ -1,91 +1,68 @@
 \section{Materiales y métodos}
 
-\subsection{Estado actual y brecha de conocimiento}
+Este estudio se desarrolló mediante un pipeline computacional reproducible basado en análisis de redes y anotación funcional. Todos los análisis se ejecutaron en \textbf{Python 3.10} \cite{Python_2023} (bibliotecas \texttt{pandas} \cite{McKinney2010_pandas} y \texttt{requests}) y \textbf{R 4.3.2} \cite{R_core_2023}, empleando los paquetes \texttt{igraph} (v1.5.1) \cite{Csardi2006_igraph}, \texttt{clusterProfiler} (v4.10.1) \cite{Yu2012_clusterProfiler} y \texttt{org.Hs.eg.db} (Bioconductor) \cite{bioc_manual}. Las interacciones proteína–proteína se recuperaron mediante la API de \textbf{STRING v12.0} \cite{Szklarczyk2019_STRING} y la visualización opcional se realizó con \textbf{Cytoscape v3.10.1} \cite{Shannon2003_cytoscape}. Todas las salidas se almacenaron en \texttt{results/}, acompañadas de ficheros \texttt{.meta.json} para documentar parámetros clave y trazabilidad temporal.
 
-Diversos estudios han explorado los factores genéticos y fisiológicos implicados en los comportamientos anómalos de ingesta, especialmente en relación con el consumo de alcohol. Morozova et al. (2012) \cite{morozova2012} describieron la complejidad genética del alcoholismo, identificando múltiples genes y fenotipos asociados, mientras que Rachdaoui y Sarkar (2013) \cite{rachdaoui2013} detallaron cómo el alcohol altera los mecanismos endocrinos que regulan la homeostasis hídrica. Sin embargo, ambos enfoques se centran en la respuesta al alcohol y no en las alteraciones primarias del impulso de beber o en la regulación molecular de la sed.
+\subsection{Obtención, normalización y anotación de genes}
 
-En el ámbito clínico, Bhatia y Sharma (2017) \cite{bhatia2017} abordaron la polidipsia psicogénica y sus dificultades de manejo, y Yamashiro et al. (2013) \cite{yamashiro2013} documentaron casos de intoxicación por agua. Aunque estas investigaciones evidencian la relevancia fisiológica y médica del comportamiento de ingesta anómala, se limitan a descripciones clínicas y carecen de una integración con modelos moleculares o genómicos.
+Los genes asociados al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082) se obtuvieron a partir del fichero oficial \texttt{phenotype\_to\_genes.txt} proporcionado por la \textbf{Human Phenotype Ontology} (HPO) \cite{robinson2008hpo, kohler2021hpo}. Este archivo contiene asociaciones fenotipo–gen \textit{inferidas} mediante la estructura jerárquica de la ontología. El script \texttt{01\_download\_hpo\_genes.py} descarga dicho fichero desde el repositorio de HPO, filtra por el identificador de interés mediante el paquete \texttt{org.Hs.eg.db} (R 4.3.2) y genera los archivos \texttt{hpo\_genes.csv} y \texttt{hpo\_genes.meta.json}.
 
-Más recientemente, Leger et al. (2024) \cite{leger2024} aplicaron un enfoque de biología de sistemas para analizar redes génicas asociadas al consumo de alcohol, demostrando el potencial de estos métodos para comprender comportamientos complejos. No obstante, no existen estudios equivalentes que apliquen este enfoque al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082), tal como se define en la \textbf{Human Phenotype Ontology} (HPO). Por tanto, la principal brecha en el conocimiento reside en la falta de un análisis sistemático de redes génicas que vincule este fenotipo con los mecanismos moleculares que regulan la homeostasis hídrica y el control de la sed.
+La estandarización se realizó con \texttt{02\_clean\_genes.R}. Se eliminaron duplicados y se mapearon los símbolos génicos a identificadores \textbf{ENTREZ} y \textbf{ENSEMBL} mediante el paquete \texttt{org.Hs.eg.db} \cite{bioc_manual}. Los genes sin correspondencia oficial se registraron en \texttt{genes\_no\_reconocidos.txt}. El conjunto normalizado final se almacenó en \texttt{clean\_genes.csv} para su uso en fases posteriores.
 
-\subsection{Metodología}
+\subsection{Interacciones PPI y construcción de la red inducida}
 
-La investigación seguirá un enfoque \textbf{cuantitativo} e \textit{in silico}, basado en la construcción y análisis de redes génicas para estudiar los genes asociados al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082). El flujo metodológico propuesto se divide en las siguientes fases:
+Las interacciones proteína–proteína se obtuvieron a través de la \textbf{API REST de STRING} \cite{Szklarczyk2019_STRING}, utilizando una consulta por lotes para la especie \textit{Homo sapiens} (taxid 9606). El script \texttt{03\_string\_interactions.py} filtró las interacciones con un umbral de alta confianza equivalente a \textit{score} $\geq 0.7$ (escala 0--1). Para construir una \textbf{red inducida} por los genes del fenotipo, se conservaron solo los pares en los que ambos genes pertenecen al conjunto HPO depurado. Las aristas A--B y B--A se consolidaron reteniendo el \textit{score} máximo. El resultado se guardó como \texttt{string\_edges.csv}, incluyendo la evidencia asociada (p.\,ej., \textit{experimental}, \textit{database}, \textit{textmining}).
 
-\begin{itemize}
-    \item \textbf{Recolección y depuración de datos.} 
-    Los genes relacionados con el fenotipo \textit{Abnormal drinking behaviour} (HP:0030082) se recopilaron a partir de la base de datos \textbf{Human Phenotype Ontology} (HPO; versión 2024-06-10, consultada el 20/10/2025) \cite{robinson2008hpo, kohler2021hpo}, garantizando que la información utilizada fue actual y de alta calidad. 
-    La depuración incluyó la eliminación de duplicados, la estandarización de identificadores génicos mediante el paquete \texttt{org.Hs.eg.db} (R 4.3.2), y la selección de aquellos genes con evidencia clínica o experimental respaldada en la ontología, siguiendo las recomendaciones metodológicas para reconstrucción de redes génicas \cite{Ideker2001_netbio, futreal2014landscape}. 
-    Posteriormente, los datos se enriquecieron mediante la plataforma \textbf{STRING} (versión 12.0) \cite{Szklarczyk2019_STRING}, que proporciona información sobre interacciones físicas y funcionales. 
-    Solo se consideraron las interacciones con un \textit{combined score} superior a 0.7 (alta confianza) y aquellas clasificadas en las categorías “experiments” y “databases”, con el objetivo de mantener la robustez de las asociaciones biológicas.
+La construcción del grafo se realizó con \texttt{04\_build\_network.R} empleando \texttt{igraph} \cite{Csardi2006_igraph}. El grafo se definió como no dirigido y ponderado, usando el \textit{score} de STRING como peso de arista. Se eliminaron nodos aislados y se calcularon métricas de centralidad (grado, \textit{betweenness}, \textit{closeness}) y coeficiente de agrupamiento local mediante \texttt{transitivity()}. La identificación de módulos se realizó con el algoritmo de \textit{Louvain clustering} \cite{Blondel2008_Louvain}. El grafo final se almacenó como \texttt{network\_graph.rds} y las métricas en \texttt{network\_metrics.csv} y \texttt{network\_summary.csv}.
 
-    \item \textbf{Construcción de la red génica.} 
-    Se aplicaron métodos de biología de sistemas para construir una red no dirigida y ponderada que representó las interacciones génicas. 
-    Los nodos correspondieron a genes y las aristas a interacciones proteicas o funcionales derivadas de STRING. 
-    La red se generó y manipuló utilizando el paquete \texttt{igraph} (v1.5.1, R 4.3.2) \cite{Csardi2006_igraph} y se visualizó mediante la herramienta \texttt{Cytoscape} (v3.10.1) \cite{Shannon2003_cytoscape}, empleando un diseño \textit{force-directed} que optimiza la distribución de los nodos según su conectividad. 
-    Se eliminaron posibles nodos aislados y se verificó la coherencia topológica de la red resultante.
+Adicionalmente, se integró información farmacológica mediante consultas a \textbf{ChEMBL} \cite{gaulton2012chembl} (incluido en el script de STRING), generando \texttt{chembl\_targets.csv}. Esta información se añadió como atributo binario a los nodos (\texttt{is\_chembl\_target}).
 
-    \item \textbf{Análisis estadístico y funcional.} 
-    La red obtenida se analizó con el fin de identificar nodos altamente conectados (\textit{hubs}), módulos funcionales y subredes relevantes. 
-    Se calcularon métricas topológicas clave —grado de conectividad, betweenness, closeness y coeficiente de agrupamiento— mediante las funciones \texttt{centr\_degree()}, \texttt{centr\_betweenness()} y \texttt{transitivity()} del paquete \texttt{igraph} \cite{Csardi2006_igraph}. 
-    La detección de módulos se realizó utilizando el algoritmo de \textit{Louvain clustering} \cite{Blondel2008_Louvain}. 
-    Posteriormente, se efectuó un \textbf{análisis de enriquecimiento funcional} con el paquete \texttt{clusterProfiler} (v4.10.1) \cite{Yu2012_clusterProfiler}, aplicando las bases de datos \textbf{GO} (Gene Ontology) \cite{Ashburner2000_GO} y \textbf{KEGG} \cite{Kanehisa2000_KEGG}. 
-    Se consideraron significativas las categorías con un valor ajustado de $p < 0.05$ tras corrección por FDR mediante el método de Benjamini–Hochberg. 
-    Las rutas y procesos más relevantes se relacionaron con la homeostasis hídrica, la señalización neuroendocrina y la regulación del impulso de la sed \cite{barabasi2019network, li2024complex}.
+\subsection{Enriquecimiento funcional y visualización de resultados}
 
-    \item \textbf{Interpretación de resultados.} 
-    Los resultados del análisis de red y del enriquecimiento funcional se integraron con la información disponible en la literatura biomédica reciente, permitiendo identificar posibles mecanismos moleculares implicados en el fenotipo \textit{Abnormal drinking behaviour}. 
-    En particular, se priorizaron genes con alta centralidad funcional, asociados a rutas de señalización hipotalámica y transporte renal de agua. 
-    Este enfoque siguió la metodología propuesta para estudios de enfermedades complejas mediante análisis de redes multi-ómicas \cite{Barabasi2011_networkMedicine, barabasi2019network}, con el propósito de garantizar la reproducibilidad del trabajo y facilitar su ampliación futura.
-\end{itemize}
+El análisis funcional se realizó con \texttt{05\_enrichment\_analysis.R}, utilizando \texttt{clusterProfiler} \cite{Yu2012_clusterProfiler} para ejecutar enriquecimiento GO: Biological Process \cite{Ashburner2000_GO} y KEGG \cite{Kanehisa2000_KEGG}. Se seleccionaron los \textbf{20 genes con mayor betweenness} como subconjunto prioritario. Se aplicó corrección por FDR mediante Benjamini--Hochberg, reteniendo términos con \(p_{\mathrm{aj}}<0.05\). Los resultados se guardaron en \texttt{enrichment\_GO.csv} y se generó una figura tipo \textit{dotplot} mediante \texttt{enrichplot}.
 
-En conjunto, esta metodología permite un análisis \textbf{sistemático, reproducible y escalable} de los genes implicados en comportamientos anómalos de ingesta, sin requerir experimentación directa, lo que la convierte en una estrategia adecuada para un trabajo de investigación a nivel universitario.
+La generación de figuras finales se realizó mediante \texttt{06\_export\_figures.R}, produciendo: (i) un histograma de grado, (ii) una visualización de módulos en la red y (iii) un heatmap de los principales hubs. Las figuras se almacenaron en \texttt{RESULTS/figures/}. Para visualización interactiva adicional se utilizó \textbf{Cytoscape} \cite{Shannon2003_cytoscape} empleando un diseño \textit{force-directed}.
 
-\subsection{Detalles experimentales y de software}
-Los análisis estadísticos se realizaron en el entorno \textbf{R} (v4.3.2) \cite{R_core_2023} utilizando los paquetes \texttt{igraph} \cite{Csardi2006_igraph} y \texttt{clusterProfiler} \cite{Yu2012_clusterProfiler}.
-El procesamiento inicial de datos y filtrado de interacciones se efectuó en \textbf{Python} (v3.10) \cite{Python_2023}, empleando \texttt{pandas} \cite{McKinney2010_pandas} y \texttt{networkx} \cite{Hagberg2008_networkx}.
+\subsection{Ejecución del pipeline y reproducibilidad}
 
-\subsection{Resultados}
+La ejecución completa del pipeline se realizó secuencialmente desde \texttt{CODE/scripts/}, siguiendo el orden:
 
-En esta investigación se ha realizado un análisis preliminar de los genes asociados al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082) mediante herramientas de \textbf{biología de sistemas} y \textbf{análisis de redes}. Los resultados obtenidos se pueden resumir de manera conceptual en las siguientes fases:
+\begin{verbatim}
+python 01_download_hpo_genes.py
+Rscript 02_clean_genes.R
+python 03_string_interactions.py
+Rscript 04_build_network.R
+Rscript 05_enrichment_analysis.R
+Rscript 06_export_figures.R
+\end{verbatim}
 
-\begin{itemize}
-    \item \textbf{Identificación de genes clave.} 
-    Se recopiló un conjunto de genes asociados al fenotipo a partir de la base de datos \textbf{Human Phenotype Ontology} (HPO), lo que permitió establecer una base de datos inicial sobre la que construir el análisis posterior.
-    
-    \item \textbf{Construcción de la red génica.} 
-    Se generó una red de interacción funcional entre los genes seleccionados, mostrando posibles conexiones y relaciones regulatorias entre ellos. Esta representación permitió observar la organización global de las interacciones y la posible existencia de módulos biológicos coherentes.
-    
-    \item \textbf{Análisis topológico.} 
-    Se identificaron nodos potencialmente centrales (\textit{hubs}) y subredes que podrían corresponder a módulos funcionales implicados en la regulación de la homeostasis hídrica y el control neuroendocrino de la sed. Estas estructuras podrían reflejar mecanismos de coordinación genética relevantes para el fenotipo.
-    
-    \item \textbf{Enriquecimiento funcional.} 
-    El análisis funcional de la red permitió sugerir rutas metabólicas y procesos biológicos que podrían estar involucrados en la manifestación del fenotipo, especialmente aquellos relacionados con la señalización hormonal y la regulación osmótica.
-\end{itemize}
+Cada script emplea rutas relativas y genera un fichero de metadatos.  
+A continuación se resumen las entradas y salidas principales de cada etapa:
 
-Dado que este estudio no incluyó experimentación directa ni generación de datos nuevos, los resultados presentados tienen carácter \textbf{conceptual y exploratorio}, basándose exclusivamente en la información disponible en bases de datos y en la literatura científica actual. Por tanto, este trabajo constituye una aproximación preliminar que sienta las bases para futuros estudios experimentales sobre los mecanismos moleculares del comportamiento anómalo de ingesta.
-
-
-\subsection{Descripción en el contexto del conocimiento existente}
-
-Los resultados conceptuales de este trabajo se enmarcan dentro del conocimiento actual sobre la genética de la ingesta de líquidos y el análisis de redes biológicas. Diversos estudios previos han abordado estos aspectos desde perspectivas complementarias, que pueden resumirse del siguiente modo:
-
-\begin{itemize}
-    \item \textbf{Complejidad genética del comportamiento de ingesta.} 
-    Estudios previos evidencian que el comportamiento de ingesta anómala tiene una base poligénica. \cite{morozova2012} describen múltiples genes implicados en distintos fenotipos de consumo de alcohol, lo que pone de manifiesto la complejidad de los mecanismos genéticos subyacentes a la conducta de ingesta.
-    
-    \item \textbf{Evidencia clínica de alteraciones fisiológicas.} 
-    Casos clínicos documentados, como los descritos por \cite{bhatia2017} y \cite{yamashiro2013}, muestran manifestaciones fisiológicas de polidipsia psicogénica y trastornos de ingesta de agua. Sin embargo, estos estudios se centran en la observación clínica sin integrar un análisis molecular que explique los mecanismos subyacentes.
-    
-    \item \textbf{Influencia endocrina y regulación hídrica.} 
-    \cite{rachdaoui2013} destacan el papel de los sistemas endocrinos en la homeostasis hídrica, reforzando la necesidad de adoptar un enfoque integrador que combine datos genéticos, fisiológicos y moleculares.
-    
-    \item \textbf{Aplicación del análisis de redes en biología de sistemas.} 
-    En el campo de la biología de sistemas, se ha demostrado que el análisis de redes permite identificar módulos funcionales y genes clave. \cite{ideker2011network} y \cite{futreal2014landscape} explican cómo construir y analizar redes biológicas, mientras que \cite{barabasi2019network} y \cite{zhou2023ppi} subrayan la utilidad de integrar datos multi-ómicos para el estudio de fenotipos complejos.
-    
-    \item \textbf{Coexpresión génica y detección de módulos funcionales.} 
-    \cite{li2024complex} muestran que la coexpresión génica puede guiar la identificación de módulos funcionales, lo cual resulta esencial para comprender los mecanismos moleculares comunes entre distintos fenotipos.
-\end{itemize}
-
-En conjunto, estos hallazgos respaldan la validez del enfoque adoptado en este trabajo, al situar el análisis de redes génicas como una herramienta clave para explorar la base molecular del fenotipo \textit{Abnormal drinking behaviour} y su relación con la regulación de la homeostasis hídrica.
-
+\begin{table}[h!]
+\centering
+\begin{tabular}{|p{3cm}|p{4.5cm}|p{5.5cm}|}
+\hline
+\textbf{Script} & \textbf{Entradas} & \textbf{Salidas} \\
+\hline
+01\_download\_hpo\_genes.py & HPO ID (HP:0030082), URL HPO & 
+\texttt{hpo\_genes.csv}, \texttt{hpo\_genes.meta.json} \\
+\hline
+02\_clean\_genes.R & \texttt{hpo\_genes.csv} &
+\texttt{clean\_genes.csv}, \texttt{genes\_no\_reconocidos.txt} \\
+\hline
+03\_string\_interactions.py & \texttt{clean\_genes.csv} &
+\texttt{string\_edges.csv}, \texttt{chembl\_targets.csv}, \texttt{string\_edges.meta.json} \\
+\hline
+04\_build\_network.R & \texttt{string\_edges.csv}, \texttt{chembl\_targets.csv} &
+\texttt{network\_metrics.csv}, \texttt{network\_modules.csv}, 
+\texttt{network\_summary.csv}, \texttt{network\_graph.rds} \\
+\hline
+05\_enrichment\_analysis.R & \texttt{network\_metrics.csv} &
+\texttt{enrichment\_GO.csv}, \texttt{enrichment\_dotplot.png} \\
+\hline
+06\_export\_figures.R & \texttt{network\_graph.rds}, \texttt{network\_metrics.csv} &
+figuras finales (PDF/PNG) \\
+\hline
+\end{tabular}
+\caption{Resumen del pipeline computacional y sus archivos de entrada y salida.}
+\end{table}
