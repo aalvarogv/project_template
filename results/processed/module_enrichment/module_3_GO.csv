@@ -1,0 +1,10 @@
+"query","significant","p_value","term_size","query_size","intersection_size","precision","recall","term_id","source","term_name","effective_domain_size","source_order","parents","p_adj"
+"set",TRUE,0.0147131430828478,10,8,7,0.875,0.7,"GO:0006811","GO:BP","monoatomic ion transport",42,2483,"GO:0006810",0.0147131430828478
+"set",TRUE,0.0201742376325175,8,8,6,0.75,0.75,"GO:0034220","GO:BP","monoatomic ion transmembrane transport",42,8445,"GO:0006811,GO:0055085",0.0201742376325175
+"set",TRUE,0.0201742376325175,8,8,6,0.75,0.75,"GO:0098660","GO:BP","inorganic ion transmembrane transport",42,18567,"GO:0055085",0.0201742376325175
+"set",TRUE,0.0349437148217636,4,8,4,0.5,1,"GO:0098661","GO:BP","inorganic anion transmembrane transport",42,18568,"GO:0015698,GO:0098660",0.0349437148217636
+"set",TRUE,0.0349437148217636,4,8,4,0.5,1,"GO:1902476","GO:BP","chloride transmembrane transport",42,22007,"GO:0006821,GO:0098656,GO:0098661",0.0349437148217636
+"set",TRUE,0.0349437148217636,4,8,4,0.5,1,"GO:0006820","GO:BP","monoatomic anion transport",42,2489,"GO:0006811",0.0349437148217636
+"set",TRUE,0.0349437148217636,4,8,4,0.5,1,"GO:0098656","GO:BP","monoatomic anion transmembrane transport",42,18563,"GO:0006820,GO:0034220",0.0349437148217636
+"set",TRUE,0.0349437148217636,4,8,4,0.5,1,"GO:0006821","GO:BP","chloride transport",42,2490,"GO:0006820,GO:0015698",0.0349437148217636
+"set",FALSE,0.0947738495877135,11,8,6,0.75,0.545454545454545,"GO:0055085","GO:BP","transmembrane transport",42,14029,"GO:0006810,GO:0009987",0.0947738495877135

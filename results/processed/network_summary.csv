@@ -1,2 +1,2 @@
-"n_nodes","n_edges","density","transitivity_global","n_chembl_targets"
-404,1214,0.0149129056826278,0.653862344769522,28
+"n_nodes","n_edges","density","transitivity_global","n_components","giant_component_size","avg_path_len_unw_giant","avg_path_len_w_giant","assortativity_degree","n_modules","modularity_louvain","n_chembl_targets"
+42,55,0.0638792102206736,0.507692307692308,7,12,1.87636363636364,2.73949414030628,0.507213363705391,9,0.745101348958151,21
