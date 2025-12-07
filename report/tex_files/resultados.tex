@@ -17,9 +17,9 @@ La consulta a la API de STRING v12.0 \cite{Szklarczyk2019_STRING} (script \textt
     \item \textbf{Transitividad global}: 0.42  
 \end{itemize}
 
-Estos valores indican una organización interna no trivial, con conexiones superiores a las esperadas al azar, sugiriendo la existencia de subestructuras funcionales dentro del conjunto génico, lo que se alinea con la hipótesis propuesta sobre la presencia de módulos biológicamente coherentes.
+Estos valores describen la estructura global de la red inducida, mostrando el tamaño del grafo, su conectividad y el nivel de agrupamiento entre los nodos.
 
-La Figura~\ref{fig:modules_network} muestra la red resultante, coloreada según los módulos detectados mediante el algoritmo de Louvain \cite{Blondel2008_Louvain}. La presencia de varios grupos densamente conectados indica la existencia de circuitos moleculares potencialmente especializados.
+La Figura~\ref{fig:modules_network} muestra la red de interacción proteína–proteína inducida por los genes asociados a HP:0030082 tras el filtrado de calidad. Cada nodo representa una proteína y las aristas corresponden a interacciones entre ellas. Los colores indican las comunidades detectadas mediante el algoritmo de Louvain \cite{Blondel2008_Louvain}, organizadas en varios componentes conectados de pequeño tamaño.
 
 \begin{figure}[h!]
 \centering
@@ -30,7 +30,8 @@ La Figura~\ref{fig:modules_network} muestra la red resultante, coloreada según 
 
 \subsection{Métricas de centralidad e identificación de hubs}
 
-El análisis topológico realizado mediante \texttt{igraph} \cite{Csardi2006_igraph} permitió identificar los genes más influyentes dentro de la red. Los \textbf{10 genes con mayor betweenness} se muestran en la Tabla~\ref{tab:top_hubs}. Estos genes actúan como puentes entre módulos o rutas funcionales, lo que los sitúa como candidatos prioritarios para futuras investigaciones experimentales.
+
+El análisis topológico de la red realizado mediante \texttt{igraph} \cite{Csardi2006_igraph} permitió calcular las métricas de centralidad para cada nodo. Los diez genes con mayor betweenness se muestran en la Tabla~\ref{tab:top_hubs}, junto con sus valores de grado, closeness y su estatus como diana farmacológica según ChEMBL.
 
 \begin{table}[h!]
 \centering
@@ -38,88 +39,123 @@ El análisis topológico realizado mediante \texttt{igraph} \cite{Csardi2006_igr
 \hline
 \textbf{Gen} & \textbf{Grado} & \textbf{Betweenness} & \textbf{Closeness} & \textbf{Diana ChEMBL} \\
 \hline
-AVPR2 & 18 & 0.210 & 0.491 & Sí \\
-AQP2  & 16 & 0.184 & 0.470 & No \\
-BSND  & 14 & 0.152 & 0.455 & No \\
-BBS2  & 12 & 0.148 & 0.431 & No \\
-BBS9  & 10 & 0.141 & 0.422 & No \\
-ACE   & 10 & 0.135 & 0.418 & Sí \\
-OPRM1 & 9  & 0.131 & 0.402 & Sí \\
-DRD2  & 9  & 0.128 & 0.398 & Sí \\
-GABRA2 & 8 & 0.102 & 0.371 & Sí \\
-COMT  & 7  & 0.097 & 0.355 & Sí \\
+PKHD1   & 3 & 0.029  & 0.690 & No \\
+HNF1B   & 3 & 0.022  & 0.522 & No \\
+NPHP1   & 6 & 0.021  & 0.731 & No \\
+AQP2    & 4 & 0.020  & 0.667 & Sí \\
+SLC12A3 & 5 & 0.020  & 0.723 & Sí \\
+NPHP3   & 6 & 0.016  & 0.724 & No \\
+HESX1   & 3 & 0.016  & 0.622 & No \\
+KCNJ1   & 5 & 0.015  & 0.709 & Sí \\
+PROKR2  & 2 & 0.015  & 0.622 & Sí \\
+FGFR1   & 2 & 0.012  & 0.543 & Sí \\
 \hline
 \end{tabular}
-\caption{Top 10 genes con mayor betweenness en la red inducida. El estatus de diana farmacológica se obtuvo de ChEMBL \cite{gaulton2012chembl}.}
+\caption{Top 10 genes con mayor betweenness en la red inducida. El estatus de diana farmacológica se obtuvo de ChEMBL.}
 \label{tab:top_hubs}
 \end{table}
 
-Varios de estos genes (AVPR2, ACE, DRD2, OPRM1 y GABRA2) aparecen descritos previamente como reguladores de mecanismos endocrinos, neurohormonales o conductuales \cite{rachdaoui2013, morozova2012}, lo cual refuerza su relevancia biológica en la manifestación del fenotipo.
-
-La Figura~\ref{fig:hubs_heatmap} presenta un \textit{heatmap} con las métricas normalizadas de los diez genes principales, mostrando patrones diferenciados entre módulos.
+La Figura~\ref{fig:hubs_heatmap} muestra un \textit{heatmap} con las métricas normalizadas de los diez genes principales. La representación permite comparar visualmente los valores de betweenness, closeness y grado entre los nodos con mayor centralidad estructural en la red.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.70\textwidth]{figures/hubs_heatmap.png}
-\caption{Perfil de centralidad de los diez genes más influyentes en la red, normalizado entre 0 y 1.}
+\caption{Perfil de centralidad de los diez genes más influyentes de la red, normalizado entre 0 y 1.}
 \label{fig:hubs_heatmap}
 \end{figure}
 
+Además, se generaron visualizaciones adicionales para describir la estructura de la red. La Figura~\ref{fig:degree_hist} muestra la distribución de grados, donde se observa la frecuencia de nodos según su número de interacciones. Esta representación permite caracterizar la conectividad global del grafo.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/degree_histogram.png}
+\caption{Histograma de la distribución de grados en la red inducida.}
+\label{fig:degree_hist}
+\end{figure}
+
+También se representó la relación entre el grado y la betweenness de los nodos (Figura~\ref{fig:degree_betw}). Esta visualización facilita la descripción de la variabilidad conjunta de ambas métricas de centralidad dentro del conjunto génico analizado.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/degree_vs_betweenness.png}
+\caption{Relación entre el grado y la betweenness de los nodos de la red inducida. Cada punto representa un gen.}
+\label{fig:degree_betw}
+\end{figure}
+
+
+
 \subsection{Análisis de enriquecimiento funcional}
 
-El análisis GO: Biological Process \cite{Ashburner2000_GO} realizado con \texttt{clusterProfiler} \cite{Yu2012_clusterProfiler} sobre los 20 genes de mayor betweenness reveló un conjunto de términos significativamente enriquecidos tras corrección FDR \cite{BenjaminiHochberg1995}. Entre los más relevantes (Tabla~\ref{tab:go_terms}) destacan:
+El análisis de enriquecimiento en GO: Biological Process \cite{Ashburner2000_GO} se realizó con \texttt{gprofiler2} utilizando como conjunto de prueba los 20 genes con mayor betweenness y como fondo el conjunto completo de genes presentes en la red, siguiendo el procedimiento del script \texttt{05\_enrichment\_analysis.R}. Se aplicó corrección por comparaciones múltiples mediante FDR (Benjamini--Hochberg) \cite{BenjaminiHochberg1995}. En total se evaluaron \textbf{1171 términos GO:BP}; sin embargo, ninguno alcanzó el umbral de significación establecido (p-ajustada $\leq 0.10$), por lo que no se identificaron procesos significativamente enriquecidos bajo este criterio.
 
-\begin{itemize}
-    \item \textbf{Regulación de la homeostasis hídrica}
-    \item \textbf{Señalización hormonal y respuesta a estímulos neuroendocrinos}
-    \item \textbf{Regulación del comportamiento ingestivo y motivacional}
-\end{itemize}
-
-Estos resultados apoyan directamente la hipótesis del estudio, indicando que los genes asociados a HP:0030082 forman un módulo funcionalmente coherente relacionado con la regulación de la ingesta y los mecanismos osmorreguladores.
+La Tabla~\ref{tab:go_terms} muestra, únicamente a modo descriptivo, los cinco términos con menor p-ajustada dentro del ranking global obtenido. Dado que ninguno supera el umbral de significación, estos resultados deben interpretarse como una ordenación relativa y no como evidencia de enriquecimiento funcional.
 
 \begin{table}[h!]
 \centering
 \begin{tabular}{lcc}
 \hline
-\textbf{Término GO} & \textbf{ID} & \textbf{p-ajustada} \\
+\textbf{Término GO} & \textbf{ID} & \textbf{p-ajustada (FDR)} \\
 \hline
-Regulation of water homeostasis & GO:0030104 & $1.8 \times 10^{-3}$ \\
-Hormone-mediated signaling pathway & GO:0009755 & $3.2 \times 10^{-3}$ \\
-Behavioral response to stimulus & GO:0007631 & $4.7 \times 10^{-3}$ \\
-Neurotransmitter receptor activity & GO:0030594 & $6.5 \times 10^{-3}$ \\
-Regulation of fluid intake & GO:0003031 & $7.1 \times 10^{-3}$ \\
+Regulation of extrinsic apoptotic signaling pathway & GO:2001239 & 0.87 \\
+Cell junction assembly                             & GO:0034329 & 0.87 \\
+Cell junction organization                          & GO:0034330 & 0.87 \\
+Tooth mineralization                                & GO:0034505 & 0.87 \\
+Regulation of mesenchymal cell apoptotic process    & GO:0061295 & 0.87 \\
 \hline
 \end{tabular}
-\caption{Términos GO:BP significativamente enriquecidos entre los genes con mayor centralidad.}
+\caption{Términos GO:BP con menor p-ajustada dentro del ranking completo. Ninguno alcanza significación estadística con el criterio p-ajustada
+$\leq 0.10$ (FDR).}
 \label{tab:go_terms}
 \end{table}
 
-La Figura~\ref{fig:go_dotplot} muestra una visualización tipo \textit{dotplot} del enriquecimiento, facilitando la interpretación de los procesos implicados.
+La Figura~\ref{fig:go_dotplot} representa un \textit{dotplot} con los 20 términos mejor clasificados según p-ajustada (FDR). El eje X muestra $-\log_{10}(\text{FDR})$ y el tamaño de los puntos refleja el número de genes del conjunto de hubs asociados a cada término. Esta visualización proporciona un resumen claro del ranking obtenido, aun en ausencia de procesos significativamente enriquecidos.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.70\textwidth]{figures/enrichment_dotplot.png}
-\caption{Dotplot de enriquecimiento GO:BP obtenido mediante \texttt{clusterProfiler}.}
+\includegraphics[width=0.80\textwidth]{figures/enrichment_dotplot_top.png}
+\caption{Dotplot del análisis de enriquecimiento GO:BP mostrando los 20 términos con menor
+p-ajustada (FDR). Ningún término superó el umbral de significación (p-ajustada $\leq 0.10$);
+el gráfico resume el orden relativo de los términos y el tamaño de la intersección génica.}
 \label{fig:go_dotplot}
 \end{figure}
 
+
 \subsection{Integración de resultados respecto a los objetivos planteados}
 
-Los resultados obtenidos permiten responder sistemáticamente a los objetivos planteados:
+Los análisis desarrollados permiten organizar los resultados obtenidos en relación
+con los objetivos definidos en la metodología, siguiendo un enfoque estrictamente
+descriptivo acorde a la naturaleza de esta sección.
 
 \begin{itemize}
     \item \textbf{Objetivo 1: Identificar fenotipos y genes asociados.}  
-    Se obtuvo un conjunto depurado y reproducible de 51 genes con soporte en HPO.
+    A partir de la consulta estandarizada en HPO y del posterior proceso de
+    depuración y normalización, se obtuvo un conjunto reproducible de 51 genes
+    asociados al fenotipo \textit{Abnormal drinking behaviour}. Este conjunto
+    constituye la base del análisis de red y del estudio funcional posterior.
 
     \item \textbf{Objetivo 2: Construir y analizar la red génica.}  
-    La red inducida de 38 nodos y 112 aristas mostró modularidad, estructura interna y presencia de hubs.
+    La red inducida a partir de las interacciones de STRING resultó en 38 nodos
+    y 112 aristas. El análisis topológico permitió caracterizar su estructura
+    mediante métricas de centralidad y cohesión, mostrando organización modular
+    y la presencia de nodos con alta conectividad. Estos resultados cuantifican
+    la arquitectura interna del conjunto génico estudiado.
 
-    \item \textbf{Objetivo 3: Realizar análisis funcionales.}  
-    Se identificaron rutas asociadas a homeostasis hídrica y señalización neuroendocrina.
+    \item \textbf{Objetivo 3: Realizar análisis de enriquecimiento funcional.}  
+    Se evaluaron 1171 términos GO:BP utilizando \texttt{gprofiler2} con corrección
+    FDR (Benjamini--Hochberg). Ningún término alcanzó el umbral de significación
+    establecido (p-ajustada $\leq 0.10$), por lo que no se identificaron procesos
+    biológicos enriquecidos según este criterio. No obstante, se obtuvo un ranking
+    de términos ordenados por p-ajustada que permite contextualizar los procesos
+    mejor posicionados dentro del conjunto evaluado.
 
     \item \textbf{Objetivo 4: Integrar hallazgos para generar hipótesis.}  
-    Los hubs y los términos GO enriquecidos sugieren que la desregulación de mecanismos neuromoduladores y osmóticos puede contribuir a la alteración del comportamiento de ingesta.
+    La combinación de las métricas topológicas, la modularidad y la priorización
+    de genes mediante betweenness proporciona un punto de partida para la
+    formulación de hipótesis en la sección de Discusión. Los resultados aquí
+    presentados delimitan de forma objetiva qué elementos de la red podrían ser
+    candidatos a un análisis biológico más profundo.
 \end{itemize}
 
-Finalmente, los hallazgos apoyan la hipótesis inicial:  
-\textbf{los genes asociados a HP:0030082 conforman un módulo funcionalmente coherente, enriquecido en procesos que regulan la ingesta y la homeostasis del agua.}
+En conjunto, los resultados aportan una caracterización cuantitativa del conjunto
+génico y de su red de interacciones, que sirve como base para la evaluación
+posterior de la hipótesis planteada, desarrollada en la sección de Discusión.

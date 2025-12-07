@@ -2,6 +2,6 @@
   "hpo_id": "HP:0030082",
   "url": "https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/phenotype_to_genes.txt",
   "n_genes": 54,
-  "timestamp": "2025-12-06T13:18:21Z",
+  "timestamp": "2025-12-07T09:49:19Z",
   "notes": "Anotaciones inferred desde phenotype_to_genes.txt (HPO release latest)."
 }

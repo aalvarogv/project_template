@@ -1,8 +1,8 @@
 {
-  "date_time": "2025-12-07T04:12:57+0100",
+  "date_time": "2025-12-07T13:20:36+0100",
   "organism": "Homo sapiens",
   "db": "GO:BP",
-  "method": "FDR (Benjamini–Hochberg)",
+  "method": "FDR (Benjamini--Hochberg)",
   "query_size": 20,
   "background_n": 42,
   "tool": "gprofiler2_0.2.4"

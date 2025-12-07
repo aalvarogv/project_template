@@ -18,7 +18,6 @@ if(!file.exists(metrics_file)) stop("Error: No se encuentra ", metrics_file)
 
 metrics <- read.csv(metrics_file, stringsAsFactors = FALSE)
 
-
 # ===== 2. Conjunto de prueba: top hubs =====
 top_genes <- metrics %>%
   arrange(desc(betweenness)) %>%
@@ -73,34 +72,42 @@ if (!is.null(gp) && !is.null(gp$result) && nrow(gp$result) > 0) {
     cat("[warn] Sin términos con p_adj <= 0.1; revisa", out_full, "para ver el ranking completo.\n")
   }
 
-  # Dotplot
+  # ===== DOTPLOT LEGIBLE (TOP 20) =====
   if (nrow(res) > 0) {
-    topN <- res %>% dplyr::slice_min(order_by = p_adj, n = 15) %>%
+    topN <- res %>%
+      dplyr::arrange(p_adj) %>%
+      dplyr::slice(1:20) %>%                             # top 20 términos
       dplyr::mutate(
+        term_name     = stringr::str_trunc(term_name, 60),  # recorta nombres largos
         term_name     = factor(term_name, levels = rev(unique(term_name))),
         minus_log10_p = -log10(p_adj)
       )
 
-    p <- ggplot2::ggplot(topN, ggplot2::aes(x = minus_log10_p, y = term_name, size = intersection_size)) +
+    p <- ggplot2::ggplot(
+      topN,
+      ggplot2::aes(x = minus_log10_p, y = term_name, size = intersection_size)
+    ) +
       ggplot2::geom_point() +
-      ggplot2::labs(title = "Enriquecimiento GO:BP (g:Profiler — fondo personalizado)",
-                    x = expression(-log[10](FDR)),
-                    y = NULL, size = "Genes\nintersección") +
-      ggplot2::theme_minimal(base_size = 11)
+      ggplot2::labs(
+        title = "Top 20 términos GO:BP (ordenados por FDR)",
 
-    if (has_ggrepel) {
-      p <- p + ggrepel::geom_text_repel(ggplot2::aes(label = term_id),
-                                        size = 3, min.segment.length = 0.1, max.overlaps = Inf)
-    }
+        x     = expression(-log[10](FDR)),
+        y     = NULL,
+        size  = "Genes\nintersección"
+      ) +
+      ggplot2::theme_minimal(base_size = 11) +
+      ggplot2::theme(
+        axis.text.y = ggplot2::element_text(size = 8),
+        panel.grid.major.y = ggplot2::element_blank()
+      )
 
-    out_plot <- file.path(fig_dir, "enrichment_dotplot.png")
-    ggplot2::ggsave(out_plot, p, width = 8, height = 6)
-    cat("[ok] Figura de dotplot guardada en:", out_plot, "\n")
+    out_plot <- file.path(fig_dir, "enrichment_dotplot_top.png")
+    ggplot2::ggsave(out_plot, p, width = 7, height = 5)
+    cat("[ok] Figura de dotplot (top 20) guardada en:", out_plot, "\n")
   }
 } else {
   cat("[warn] g:Profiler no devolvió filas (con fondo personalizado y FDR). Exporta la lista de hubs y considera relajar umbral.\n")
 }
-
 
 # ===== 4. Enriquecimiento por módulos Louvain =====         
 if ("module" %in% names(metrics)) {
@@ -142,15 +149,15 @@ if ("module" %in% names(metrics)) {
 
 # ===== 5. Metadata del análisis =====
 meta <- list(
-  date_time = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
-  organism = "Homo sapiens",
-  db = "GO:BP",
-  method = "FDR (Benjamini–Hochberg)",
-  query_size = length(top_genes),
+  date_time    = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
+  organism     = "Homo sapiens",
+  db           = "GO:BP",
+  method       = "FDR (Benjamini--Hochberg)",
+  query_size   = length(top_genes),
   background_n = length(bg_genes),
-  tool = paste0("gprofiler2_", as.character(utils::packageVersion("gprofiler2")))
-
+  tool         = paste0("gprofiler2_", as.character(utils::packageVersion("gprofiler2")))
 )
-jsonlite::write_json(meta, file.path(proc_dir, "enrichment_meta.json"), pretty = TRUE, auto_unbox = TRUE)
+jsonlite::write_json(meta, file.path(proc_dir, "enrichment_meta.json"),
+                     pretty = TRUE, auto_unbox = TRUE)
 
 cat("Enriquecimiento finalizado. Tablas en results/processed y figuras en results/figures.\n")
