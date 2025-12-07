@@ -134,14 +134,14 @@ for g in tqdm(genes, desc="ChEMBL"):
 
 
 pd.DataFrame(chembl_targets).to_csv(
-    base_dir / "RESULTS" / "raw" / "chembl_targets.csv",
+    base_dir / "results" / "raw" / "chembl_targets.csv",
     index=False
 )
 
 chembl_df = pd.DataFrame(chembl_targets)
 chembl_path = base_dir / "results" / "raw" / "chembl_targets.csv"
 chembl_df.to_csv(chembl_path, index=False)
-print("[ok] Targets de ChEMBL guardados en: {chembl_path}")
+print(f"[ok] Targets de ChEMBL guardados en: {chembl_path}")
 
 
 # ===== 6. Metadatos =====
