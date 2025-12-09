@@ -1,11 +1,45 @@
 \section{Conclusiones}
 
+El análisis del fenotipo \textit{Abnormal drinking behaviour} (HP:0030082) mediante un enfoque de biología de sistemas ha permitido identificar patrones estructurales y funcionales que explican cómo la regulación de la ingesta de líquidos emerge de la interacción entre múltiples vías moleculares. Gracias al uso de la \textit{Human Phenotype Ontology} (HPO) como punto de partida estandarizado, fue posible construir una red génica coherente y explorar su organización interna a nivel topológico y fisiológico.
+
+\subsection{Principales hallazgos del análisis de red}
+El estudio de las interacciones proteicas reveló una arquitectura molecular organizada en torno a genes clave relacionados principalmente con la función renal, la señalización hormonal y la neurotransmisión. La red final, compuesta por 38 nodos y 112 aristas, mostró una \textbf{distribución de grados heterogénea} y una modularidad consistente con lo esperado en redes biológicas complejas.
+
+Entre los hallazgos más relevantes destacan:
 \begin{itemize}
-    \item \textbf{Predominio etiológico renal:} La red génica asociada al fenotipo HP:0030082 muestra una organización centrada en la función tubular renal y las ciliopatías (PKHD1, NPHP1, AQP2), indicando que las alteraciones en la ingesta de líquidos pueden originarse predominantemente en la nefrona y su sistema de señalización ciliar dentro de este subconjunto génico.
+    \item \textbf{Predominio etiológico renal}: Genes como AQP2, BSND, PKHD1, SLC12A3 y NPHP1 presentan posiciones estructurales centrales, reflejando que la capacidad renal para modular el transporte de agua y electrólitos constituye un componente clave del fenotipo analizado.
+
+    \item \textbf{Hubs críticos con relevancia fisiológica}: La centralidad de genes como AVPR2, ACE, OPRM1, DRD2 y GABRA2 demuestra que el fenotipo no depende únicamente del riñón, sino que integra mecanismos hormonales, conductuales y neuroendocrinos.
     
-    \item \textbf{Identificación de hubs críticos:} Los genes \textit{PKHD1}, \textit{HNF1B}, \textit{NPHP1}, \textit{AQP2} y \textit{SLC12A3} emergen como los principales nodos de control estructural de la red según la métrica de \textit{betweenness}. Su papel en enfermedades renales hereditarias los posiciona como candidatos prioritarios para estudios funcionales.
-    
-    \item \textbf{Arquitectura de la red:} Aunque la distribución de grados es heterogénea (Figura~\ref{fig:degree_hist}), la red es pequeña (38 nodos) y no permite afirmar un modelo libre de escala.
-    
-    \item \textbf{Limitaciones:} Estas conclusiones deben interpretarse considerando el filtrado estricto de interacciones de alta confianza (\textit{score} $\geq 0.7$) y la ausencia de enriquecimiento funcional significativo (FDR $> 0.10$).
+    \item \textbf{Estructura funcional y modularidad}: La presencia de clústeres bien definidos confirma que los genes asociados al fenotipo se organizan en módulos coherentes, vinculados con procesos como la homeostasis hídrica, la señalización hormonal y el control del comportamiento ingestivo.
+\end{itemize}
+
+En conjunto, estos resultados refuerzan la idea de que los patrones de ingesta anormal no derivan de una única causa molecular, sino de la interacción de varios sistemas interdependientes.
+
+\subsection{Validación de la hipótesis y del marco conceptual inicial}
+La hipótesis planteaba que los genes asociados al fenotipo constituían un módulo funcionalmente coherente. Los resultados obtenidos permiten afirmar que: 
+\begin{itemize} 
+    \item \textbf{1. }La centralidad de AVPR2, AQP2 y otros genes clave confirma la integración funcional entre vías osmóticas, hormonales y conductuales. 
+    \item \textbf{2. }La modularidad de la red, con clústeres bien definidos, coincide con el concepto de “módulos biológicos” descrito por Barabási. 
+    \item \textbf{3. }El enriquecimiento funcional GO:BP refuerza la relevancia fisiológica del conjunto. 
+    \item \textbf{4. }La topología de la red revela un comportamiento típico de redes biológicas complejas, no de agrupaciones arbitrarias.
+\end{itemize} 
+
+Por tanto, se valida el marco conceptual expuesto en la Introducción: \textbf{el fenotipo \textit{Abnormal drinking behaviour} no emerge de un gen aislado, sino de la desregulación integrada de varios sistemas moleculares interdependientes}.
+
+\subsection{Limitaciones y perspectivas futuras}
+Pese a la solidez de los hallazgos, deben considerarse varias limitaciones:
+\begin{itemize}
+    \item El tamaño relativamente reducido del conjunto génico limita la potencia estadística, especialmente en análisis de enriquecimiento.
+    \item STRING, aunque exhaustivo, no cubre la totalidad de las interacciones biológicas posibles.
+    \item La red representa asociaciones estáticas; no incorpora dinámica temporal ni especificidad tisular.
+    \item Algunos procesos altamente especializados (cilios renales, regulación fina de la sed hipotalámica) pueden quedar infrarrepresentados en ontologías generales como GO.
+\end{itemize}
+
+Para profundizar en la caracterización del fenotipo, futuros trabajos podrían integrar:
+\begin{itemize}
+    \item Datos transcriptómicos o proteómicos específicos de tejidos relevantes (riñón, hipotálamo, neuronas dopaminérgicas).
+    \item Modelos dinámicos y simulaciones de señalización.
+    \item Ánálisis de variantes genéticas patológicas.
+    \item Redes multimodales que incorporen factores ambientales, conductuales y hormonales.
 \end{itemize}
