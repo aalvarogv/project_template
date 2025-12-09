@@ -1,1 +1,38 @@
 \section{Discusión}
+
+\subsection{Topología y características generales de la red}
+La red de interacción génica asociada al fenotipo \textit{Abnormal drinking behaviour} (HP:0030082), compuesta por 38 nodos y 112 aristas, presenta una distribución de grados heterogénea (Figura~\ref{fig:degree_hist}). Esta heterogeneidad sugiere la presencia de un subconjunto de genes estructuralmente destacados que concentran una proporción desproporcionada de conexiones funcionales. De forma consistente con lo observado en otras redes biológicas \cite{Barabasi2011_networkMedicine}, se identificó una relación entre el grado y la centralidad de intermediación (\textit{betweenness}) (Figura~\ref{fig:degree_betw}), indicando que los nodos más conectados tienden a actuar como puentes críticos en la transmisión de información a través de la red.
+
+Dado el tamaño modesto del grafo (densidad 0.157), no es posible evaluar formalmente si la distribución de grados se ajusta a una ley de potencia; por tanto, no se puede concluir que la red posea una arquitectura de tipo \textit{scale-free}. El análisis topológico debe interpretarse en términos descriptivos, reflejando patrones relativos de conectividad más que propiedades estadísticas globales.
+
+\subsection{Predominio del eje renal y de la función ciliar en los hubs de la red}
+El análisis de centralidad (Tabla~\ref{tab:top_hubs}) revela que los genes que ocupan las posiciones estructurales más influyentes (mayor \textit{betweenness}) no corresponden necesariamente a los reguladores neuroendocrinos clásicos, sino a genes directamente implicados en la función tubular renal y en ciliopatías.
+
+Los \textit{hubs} más destacados incluyen:
+\begin{itemize}
+    \item \textbf{Transporte hídrico e iónico:}
+    \begin{itemize}
+        \item \textit{AQP2} (\textit{betweenness} 0.020), regulador esencial de la reabsorción de agua.
+        \item \textit{SLC12A3} (\textit{betweenness} 0.020), cotransportador Na-Cl clave en el túbulo distal.
+        \item \textit{KCNJ1} (\textit{betweenness} 0.015), canal de potasio fundamental en la función tubular.
+    \end{itemize}
+    \item \textbf{Ciliopatías y desarrollo renal:}
+    \begin{itemize}
+        \item \textit{PKHD1} (\textit{betweenness} 0.029, el más alto de la red), asociado a poliquistosis renal.
+        \item \textit{NPHP1} y \textit{NPHP3}, implicados en nefronoptisis.
+        \item \textit{HNF1B} (\textit{betweenness} 0.022), factor de transcripción crítico en el desarrollo.
+    \end{itemize}
+\end{itemize}
+
+Su elevada centralidad indica que las alteraciones en el fenotipo de ingesta anormal de líquidos, en el contexto de esta red inducida, están sustancialmente influenciadas por disfunciones en la capacidad renal para gestionar agua y electrólitos y la integridad ciliar. Otros genes centrales como \textit{HESX1} y \textit{PROKR2} aportan diversidad funcional, reflejando la heterogeneidad del fenotipo.
+
+\subsection{Coherencia funcional limitada y análisis modular}
+El análisis de modularidad mediante el algoritmo de Louvain detectó agrupaciones topológicas en la red (Figura~\ref{fig:modules_network}). No obstante, el análisis de enriquecimiento funcional (GO:BP) no identificó ningún término significativamente enriquecido tras la corrección por FDR ($p_{\mathrm{aj}} \leq 0.10$). Los términos mejor posicionados, como regulación de apoptosis o mineralización, no alcanzaron significación estadística.
+
+Este resultado se explica por:
+\begin{enumerate}
+    \item \textbf{Tamaño y composición de la red:} La reducción de 54 genes iniciales a 38 nodos conectados limita la potencia estadística.
+    \item \textbf{Especificidad de los mecanismos:} Los procesos moleculares (transporte tubular, cilios) pueden ser demasiado específicos para ser capturados por términos GO generales en una red tan pequeña.
+\end{enumerate}
+
+En consecuencia, las interpretaciones funcionales se centran en la biología conocida de los genes \textit{hub} individuales (identificados en la Figura~\ref{fig:hubs_heatmap} y Tabla~\ref{tab:top_hubs}), más que en una arquitectura modular global.
